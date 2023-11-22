@@ -26,7 +26,7 @@ MENU = {
 
 profit = 0
 resources = {
-    "water": 200,
+    "water": 250,
     "milk": 200,
     "coffee": 100,
 }
@@ -36,8 +36,8 @@ def is_resource_sufficient(order_ingredients):
     """Return true when water is sufficien to make coffee and ]
     false when it is insufficient"""
     for item in order_ingredients:
-        if order_ingredients[item] >= resources[item]:
-            print(f"Sorry there isnot enough water to make coffee")
+        if order_ingredients[item] > resources[item]:
+            print(f"Sorry there isnot enough {item} to make coffee")
             return False
     return True
 
@@ -84,7 +84,11 @@ while is_on:
         print(f"Money:{profit}")
     else:
         drink = MENU[choice]
-        is_resource_sufficient(drink["ingredients"])
-        payment = process_coin()
-        if is_transaction_successful(payment, drink["cost"]):
-            make_coffee(choice, drink["ingredients"])
+        if is_resource_sufficient(drink["ingredients"]):
+            payment = process_coin()
+            if is_transaction_successful(payment, drink["cost"]):
+                make_coffee(choice, drink["ingredients"])
+
+        else:
+            # If resources are insufficient, exit the loop.
+            is_on = False
