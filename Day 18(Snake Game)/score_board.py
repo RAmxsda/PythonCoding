@@ -4,6 +4,8 @@ from turtle import Turtle
 class Scoreboard(Turtle):
     def __init__(self):
         super().__init__()
+        with open("data.txt") as highscore:
+            self.high_score = int(highscore.read())
         self.color("white")
         self.penup()
         self.hideturtle()
@@ -13,18 +15,18 @@ class Scoreboard(Turtle):
 
     def update_scoreboard(self):
         self.clear()
-        self.goto(-200, 220)
+        self.goto(0, 220)
         self.write(
-            f"Score: {self.l_score}", align="center", font=("Calibri", 16, "normal")
+            f"Score: {self.l_score} High_Score:{self.high_score} ",
+            align="center",
+            font=("Calibri", 16, "normal"),
         )
 
-    def game_over(self):
-        self.goto(0, 0)
-        self.write("GAME OVER", align="center", font=("Calibri", 16, "normal"))
-        self.goto(0, -20)
-        self.write(
-            f"Score: {self.l_score}", align="center", font=("Calibri", 16, "normal")
-        )
+    def reset(self):
+        if self.l_score > self.high_score:
+            self.high_score = self.l_score
+        self.l_score = 0
+        self.update_scoreboard()
 
     def l_point(self):
         self.l_score += 1

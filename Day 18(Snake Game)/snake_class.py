@@ -25,6 +25,13 @@ class Snake:
         segment.speed("fastest")
         self.snake_segment.append(segment)
 
+    def reset(self):
+        for segment in self.snake_segment:
+            segment.goto(1000, 1000)
+        self.snake_segment.clear()
+        self.create_snake()
+        self.snake_segment[0].color("red")
+
     def extend(self):
         self.add_segment(len(self.snake_segment[-1].position()))
 
