@@ -4,7 +4,9 @@ from turtle import Turtle
 class Scoreboard(Turtle):
     def __init__(self):
         super().__init__()
-        with open("data.txt") as highscore:
+        with open(
+            "/Python 100 days challenge/Day 18(Snake Game)/data.txt"
+        ) as highscore:
             self.high_score = int(highscore.read())
         self.color("white")
         self.penup()
@@ -25,7 +27,9 @@ class Scoreboard(Turtle):
     def reset(self):
         if self.l_score > self.high_score:
             self.high_score = self.l_score
-            with open("data.txt", mode="w") as highscore:
+            with open(
+                "/Python 100 days challenge/Day 18(Snake Game)/data.txt", mode="w"
+            ) as highscore:
                 highscore.write(str(self.high_score))
         self.l_score = 0
         self.update_scoreboard()
