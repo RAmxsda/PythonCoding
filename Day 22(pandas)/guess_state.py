@@ -24,10 +24,13 @@ while len(guessed_states) < 50:
     ).title()
 
     if state == "Exit":
-        missing_states = []
-        for states in all_states:
-            if states not in guessed_states:
-                missing_states.append(states)
+        missing_states = [
+            states for states in all_states if states not in guessed_states
+        ]
+        # missing_states = []
+        # for states in all_states:
+        #     if states not in guessed_states:
+        #         missing_states.append(states)
         new_data = pandas.DataFrame(missing_states)
         new_data.to_csv("/Python 100 days challenge/Day 22(pandas)/states_to_learn.csv")
         break
