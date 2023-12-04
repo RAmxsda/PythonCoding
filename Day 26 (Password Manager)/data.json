@@ -1,0 +1,12 @@
+{
+    "Django Developer": {
+        "email": "django@email.com",
+        "password": "7!!cpc^$a2u",
+        "username": "django"
+    },
+    "Google": {
+        "email": "google@email.com",
+        "password": "o^8s1s&l%kl^d",
+        "username": "google"
+    }
+}

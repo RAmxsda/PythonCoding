@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import PhotoImage
 from tkinter import messagebox
 from random import choice, randint, shuffle
+import json
 
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
@@ -56,25 +57,67 @@ def save():
     Email = email_entry.get()
     Password = password_entry.get()
 
-    if len(Website) == 0 or Email == "@gmail.com" or len(Password) == 0:
+    new_data = {
+        Website: {
+            "email": Email,
+            "password": Password,
+            "username": Email.split("@")[0],
+        }
+    }
+    if len(Website) == 0 or Email == "@email.com" or len(Password) == 0:
         messagebox.showinfo(
             title="Oops", message="Please make sure you haven't left any fields empty."
         )
-        return
-
-    is_ok = messagebox.askokcancel(
-        title=Website, message=f"These are the details entered: \nEmail: {Email}"
-    )
-
-    if is_ok:
+    else:
+        try:
+            with open(
+                "/Python 100 days challenge/Day 26 (Password Manager)/data.json", "r"
+            ) as json_data:
+                # Reading json data
+                data = json.load(json_data)
+        except (FileNotFoundError, json.decoder.JSONDecodeError):
+            data = {}
+        # Updating data
+        data.update(new_data)
+        # Writing updated data
         with open(
-            "/Python 100 days challenge/Day 26 (Password Manager)/data.txt", "a"
-        ) as data:
-            data.write(f"{Website} | {Email} | {Password}\n")
-            website_entry.delete(0, END)
-            email_entry.delete(0, END)
-            password_entry.delete(0, END)
-            website_entry.focus()
+            "/Python 100 days challenge/Day 26 (Password Manager)/data.json", "w"
+        ) as json_data:
+            json.dump(data, json_data, indent=4)
+
+        website_entry.delete(0, END)
+        email_entry.delete(0, END)
+        password_entry.delete(0, END)
+        website_entry.focus()
+
+
+# ----------------------------- Search --------------------------------#
+
+
+def search():
+    website = website_entry.get()
+    try:
+        with open(
+            "/Python 100 days challenge/Day 26 (Password Manager)/data.json", "r"
+        ) as json_data:
+            data = json.load(json_data)
+    except FileNotFoundError:
+        messagebox.showinfo(
+            title="Error", message="No Data File Found. Please add a password."
+        )
+    else:
+        if website in data:
+            email = data[website]["email"]
+            password = data[website]["password"]
+            messagebox.showinfo(
+                title=website,
+                message=f"Email: {email}\nPassword: {password}",
+            )
+        else:
+            messagebox.showinfo(
+                title="Error",
+                message=f"No details for {website} exists. Please add a password.",
+            )
 
 
 # ---------------------------- UI SETUP ------------------------------- #
@@ -103,17 +146,19 @@ website_entry.grid(row=1, column=1, columnspan=2)
 website_entry.focus()
 email_entry = Entry(width=35)
 email_entry.grid(row=2, column=1, columnspan=2)
-email_entry.insert(0, "@gmail.com")
+email_entry.insert(0, "@email.com")
 password_entry = Entry(width=35)
 password_entry.grid(row=3, column=1, columnspan=2)
 
 
 # Buttons
+search_button = Button(text="Search", width=14, bg="yellow", command=search)
+search_button.grid(row=1, column=3)
 generate_password_button = Button(
     text="Generate Password", width=14, bg="pink", command=create_password
 )
 generate_password_button.grid(row=3, column=3)
-generate_password_button.config(padx=10)
+
 
 add_button = Button(text="Add", width=16, bg="green", command=save)
 add_button.grid(row=4, column=1, columnspan=2)
